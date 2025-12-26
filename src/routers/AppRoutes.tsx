@@ -3,7 +3,9 @@ import App from "../App";
 import { useMemo, useState } from "react";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
 import { Client } from "@/pages/Client";
-import { User } from "lucide-react";
+import { Calendar, LogOut, User } from "lucide-react";
+import { SidebarItem } from "@/components/SidebarItem";
+import UserDropdown from "@/components/UserDropdown";
 
 const AppRoutes = () => {
 
@@ -29,7 +31,7 @@ const actionsConfig = [
   //   Component: FormProject
   // },
   {
-    path: '/client', 
+    path: '/client',
     Component: Client
   },
   // {
@@ -58,24 +60,28 @@ function Layout() {
   return (
     <div className="bg-zinc-50 w-screen h-screen flex flex-col overflow-hidden">
       <header className="shrink-0 border-b shadow border-zinc-200">
-        <nav className="flex gap-2 justify-between items-center h-14 px-4">
-          <h1 onClick={() => router("/")}>Icone</h1>
-          <h1>Informações usuário</h1>
+        <nav className="flex gap-2 justify-between items-center h-14 p-5">
+          <img onClick={() => router("/")} src="../../img/mareve.png" alt="Logo mareve" className="h-40 w-auto object-contain cursor-pointer" />
+          <UserDropdown/>
         </nav>
       </header>
       <div className="flex flex-1 overflow-hidden">
-        <SidebarMenu className="bg-[#33383c] w-64 p-4 flex fle  x-col gap-2 h-full space-y-4">
+        <SidebarMenu className="bg-[#33383c] w-64 p-4 flex flex-col gap-2 h-full space-y-4">
           <div className="flex justify-center items-center">
-            <img src="../../img/WhatsApp Image 2025-12-24 at 16.50.00.jpeg" alt="" />
+            <img src="../../img/mareve.png" alt="Logo mareve"
+              className="object-contain" />
           </div>
-          <div className="border-b">
+          <div className="flex flex-col gap-2 justify-around space-y-4">
+            <SidebarItem onClick={() => router('client/')}>
+              <User />Clientes
+            </SidebarItem>
+            <SidebarItem onClick={() => router('client/')}>
+              <Calendar />Agenda
+            </SidebarItem>
           </div>
-          <div className="flex flex-col gap-2 justify-between">
-            <SidebarMenuItem className="text-zinc-50 cursor-pointer transition duration-300 ease-in-out transform hover:scale-103 flex gap-2" onClick={() => router('client/')}> <User/>Clientes</SidebarMenuItem>
-            <SidebarMenuItem className="text-zinc-50">Agenda</SidebarMenuItem>
-            <SidebarMenuItem>Atendimentos</SidebarMenuItem>
-          </div>
-          <SidebarMenuItem>Sair</SidebarMenuItem>
+          <SidebarItem onClick={() => router('client/')}>
+            <LogOut />Sair
+          </SidebarItem>
         </SidebarMenu>
         <main className="flex-1 p-4 overflow-y-auto">
           <Outlet />
