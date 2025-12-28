@@ -7,7 +7,7 @@ interface Props {
 
 export const AnimalTab = ({ animals }: Props) => {
   return (
-    <div>
+    <div className="border-2 rounded-lg p-6">
       <Card>
         {
           animals.map((animal) => (

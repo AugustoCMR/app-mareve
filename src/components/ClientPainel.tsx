@@ -22,9 +22,9 @@ export const ClientPainel = ({ isOpen, onOpenChange, client }: Props) => {
     <Dialog onOpenChange={onOpenChange} open={isOpen}>
       <DialogContent
         className="flex space-y-4 flex-col gap-0
-       overflow-y-visible sm:max-w-7xl [&>button:last-child]:top-3.5 p-2"
+       overflow-y-visible sm:max-w-8xl [&>button:last-child]:top-3.5 p-2"
       >
-        <DialogHeader className="contents space-y-0 text-leff">
+        <DialogHeader className="contents space-y-4 text-left">
           <DialogTitle className="px-6 py-4 text-base border-b" >
             Painel do Tutor
           </DialogTitle>
