@@ -1,49 +1,103 @@
-import { useMemo } from "react";
-
-interface IClient {
-  id: number;
-  tutor: string;
-  pet: string;
-  detalhe: string;
-  status: string;
-}
+import type { ClientWithAnimals } from "@/@types/Client";
+import { Card, CardItem } from "@/components/card";
+import { ClientPainel } from "@/components/ClientPainel";
+import { Button } from "@/components/ui/button";
+import { Folder } from "lucide-react";
+import { useMemo, useState } from "react";
 
 export const Client = () => {
-  const clients = useMemo<IClient[]>(() => [
-    { id: 1, tutor: 'Ana Silva', pet: 'Rex', detalhe: 'Cachorro - Golden', status: 'Agendado' },
-    { id: 2, tutor: 'Carlos Souza', pet: 'Mia', detalhe: 'Gato - Siamês', status: 'Em Atendimento' },
-    { id: 3, tutor: 'Beatriz Lima', pet: 'Thor', detalhe: 'Cachorro - Poodle', status: 'Finalizado' },
-    { id: 4, tutor: 'João Costa', pet: 'Mel', detalhe: 'Gato - Persa', status: 'Agendado' },
-    { id: 5, tutor: 'Fernanda Alves', pet: 'Bob', detalhe: 'Cachorro - Bulldog', status: 'Cancelado' },
-    { id: 6, tutor: 'Ricardo Gomes', pet: 'Luna', detalhe: 'Gato - SRD', status: 'Finalizado' },
-  ], []);
+
+  const [showModalClientPainel, setShowModalClientPainel] = useState(false);
+  const [selectedClient, setSelectedClient] = useState<ClientWithAnimals | undefined>(undefined);
+
+  const clientsWithAnimal = useMemo<ClientWithAnimals[]>(() => {
+    const c1 = { id: 1, tutor: 'Ana Silva', detalhe: 'Cachorro - Golden', status: 'Agendado' };
+    const c2 = { id: 2, tutor: 'Carlos Souza', detalhe: 'Gato - Siamês', status: 'Em Atendimento' };
+    const c3 = { id: 3, tutor: 'Beatriz Lima', detalhe: 'Cachorro - Poodle', status: 'Finalizado' };
+    const c4 = { id: 4, tutor: 'João Costa', detalhe: 'Gato - Persa', status: 'Agendado' };
+    const c5 = { id: 5, tutor: 'Fernanda Alves', detalhe: 'Cachorro - Bulldog', status: 'Cancelado' };
+    const c6 = { id: 6, tutor: 'Ricardo Gomes', detalhe: 'Gato - SRD', status: 'Finalizado' };
+
+    return [
+      {
+        ...c1,
+        animals: [{ id: 101, nome: 'Rex', tutor: c1 }],
+      },
+      {
+        ...c2,
+        animals: [{ id: 102, nome: 'Mia', tutor: c2 }],
+      },
+      {
+        ...c3,
+        animals: [{ id: 103, nome: 'Thor', tutor: c3 }],
+      },
+      {
+        ...c4,
+        animals: [{ id: 104, nome: 'Mel', tutor: c4 }],
+      },
+      {
+        ...c5,
+        animals: [{ id: 105, nome: 'Bob', tutor: c5 }],
+      },
+      {
+        ...c6,
+        animals: [{ id: 106, nome: 'Luna', tutor: c6 }],
+      },
+    ];
+  }, []);
 
   return (
     <div>
       <h1 className='text-3xl font-bold mb-3'>Clientes</h1>
-      <ul className="grid grid-cols-1 lg:grid-cols-3 m-auto w-full gap-4">
+      <Card className="grid grid-cols-1 lg:grid-cols-3 m-auto w-full gap-4">
         {
-          clients.map((client) => (
-            <ClientSlot client={client}/>
+          clientsWithAnimal.map((clientWithAnimal) => (
+            <ClientSlot
+              clientWithAnimal={clientWithAnimal}
+              onOpenChange={setShowModalClientPainel}
+              setSelectedClient={setSelectedClient}
+            />
           ))
         }
-      </ul>
-
+      </Card>
+      {
+        selectedClient &&
+        <ClientPainel
+          client={selectedClient}
+          isOpen={showModalClientPainel}
+          onOpenChange={setShowModalClientPainel}
+        />
+      }
     </div>
 
   )
 }
 
 interface ClientSlotProps {
-  client: IClient;
-
+  clientWithAnimal: ClientWithAnimals;
+  onOpenChange: (open: boolean) => void;
+  setSelectedClient: (clientWithAnimal: ClientWithAnimals) => void;
 }
 
-export const ClientSlot = ({ client }: ClientSlotProps) => {
+export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }: ClientSlotProps) => {
 
   return (
-    <li className="bg-zinc-50 p-6 flex flex-col justify-between items-left gap-3 rounded-lg shadow transition duration-300 ease-in-out transform hover:bg-zinc-100 hover:scale-103  border border-zinc-200 h-[250px] h-max-[250px]">
-      <p>{client.tutor}</p>
-    </li>
+    <CardItem className="bg-zinc-50 p-6 flex flex-col justify-between items-left gap-3 rounded-lg shadow
+     transition duration-300 ease-in-out
+       transform hover:bg-zinc-100 hover:scale-103
+        border border-zinc-200 h-[250px] h-max-[250px]"
+    >
+      <p>{clientWithAnimal.tutor}</p>
+      <Button
+        className="cursor-pointer bg-purple-300 rounded-2xl p-2 hover:scale-103 hover:bg-purple-400"
+        onClick={() => {
+          onOpenChange(true)
+          setSelectedClient(clientWithAnimal)
+        }}
+      >
+        <Folder size={18} />
+        Painel do tutor
+      </Button>
+    </CardItem>
   );
 }
