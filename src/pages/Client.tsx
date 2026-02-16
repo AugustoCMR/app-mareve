@@ -1,9 +1,8 @@
+import type { Animal } from "@/@types/Animal";
 import type { ClientWithAnimals } from "@/@types/Client";
-import { Card, CardItem } from "@/components/card";
-import { ClientPainel } from "@/components/ClientPainel";
-import { Button } from "@/components/ui/button";
-import { Folder } from "lucide-react";
-import { useMemo, useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
+import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Trash, Trash2 } from "lucide-react";
+import { Activity, useMemo, useState } from "react";
 
 export const Client = () => {
 
@@ -21,7 +20,7 @@ export const Client = () => {
     return [
       {
         ...c1,
-        animals: [{ id: 101, nome: 'Rex', tutor: c1 }],
+        animals: [{ id: 101, nome: 'Rex', tutor: c1 }, { id: 1001, nome: 'Thor', tutor: c1 }],
       },
       {
         ...c2,
@@ -47,27 +46,16 @@ export const Client = () => {
   }, []);
 
   return (
-    <div>
+    <div className="bg-zinc-100 min-h-screen">
       <h1 className='text-3xl font-bold mb-3'>Clientes</h1>
-      <Card className="grid grid-cols-1 lg:grid-cols-3 m-auto w-full gap-4">
+
+      <div className="grid grid-cols-1 m-auto w-full gap-2">
         {
-          clientsWithAnimal.map((clientWithAnimal) => (
-            <ClientSlot
-              clientWithAnimal={clientWithAnimal}
-              onOpenChange={setShowModalClientPainel}
-              setSelectedClient={setSelectedClient}
-            />
+          clientsWithAnimal.map((client) => (
+            <ClientSlot clientWithAnimal={client} />
           ))
         }
-      </Card>
-      {
-        selectedClient &&
-        <ClientPainel
-          client={selectedClient}
-          isOpen={showModalClientPainel}
-          onOpenChange={setShowModalClientPainel}
-        />
-      }
+      </div>
     </div>
 
   )
@@ -75,29 +63,63 @@ export const Client = () => {
 
 interface ClientSlotProps {
   clientWithAnimal: ClientWithAnimals;
-  onOpenChange: (open: boolean) => void;
-  setSelectedClient: (clientWithAnimal: ClientWithAnimals) => void;
+  onOpenChange?: (open: boolean) => void;
+  setSelectedClient?: (clientWithAnimal: ClientWithAnimals) => void;
 }
 
 export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }: ClientSlotProps) => {
 
+  const [expandButton, setExpandButton] = useState(false);
+
   return (
-    <CardItem className="bg-zinc-50 p-6 flex flex-col justify-between items-left gap-3 rounded-lg shadow
-     transition duration-300 ease-in-out
-       transform hover:bg-zinc-100 hover:scale-103
-        border border-zinc-200 h-[250px] h-max-[250px]"
-    >
-      <p>{clientWithAnimal.tutor}</p>
-      <Button
-        className="cursor-pointer bg-purple-300 rounded-2xl p-2 hover:scale-103 hover:bg-purple-400"
-        onClick={() => {
-          onOpenChange(true)
-          setSelectedClient(clientWithAnimal)
-        }}
-      >
-        <Folder size={18} />
-        Painel do tutor
-      </Button>
-    </CardItem>
+    <div className="bg-zinc-50 rounded-lg border">
+      <div className="flex justify-between items-center cursor-pointer hover:bg-zinc-100 p-3" onClick={() => setExpandButton(!expandButton)}>
+        <div className="flex gap-2">
+          <Avatar className="flex size-10 overflow-hidden rounded-lg">
+            <AvatarImage src="https://github.com/shadcn.png" />
+            <AvatarFallback>CN</AvatarFallback>
+          </Avatar>
+          <span className="font-semibold text-sm">{clientWithAnimal.tutor}</span>
+        </div>
+        {
+          expandButton ? <ChevronUp size={15} /> : <ChevronDown size={15} />
+
+        }
+
+      </div>
+      <Activity mode={expandButton ? 'visible' : 'hidden'}>
+        <div className="border-t p-3 space-y-4">
+          <div className="flex justify-between">
+            <p className="flex gap-1 items-center font-semibold"><PawPrint className="text-[#8E7CFF]" size={15} />Pets</p>
+            <span className="flex gap-1  text-[#8E7CFF] text-sm items-center cursor-pointer hover:underline"><CirclePlus size={15}/> Adicionar pet</span>
+          </div>
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 ">  
+            {
+              clientWithAnimal.animals.map((animal) => (
+                <AnimalSlot animal={animal} />
+              ))
+            }
+          </div>
+          <div className="">
+            <span className="flex items-center gap-2 text-sm justify-end text-destructive"><Trash2 className="cursor-pointer hover:scale-103" size={15}/>Excluir tutor</span>
+          </div>
+        </div>
+      </Activity>
+    </div>
   );
+}
+
+interface AnimalSlotProps {
+  animal: Animal;
+}
+
+export const AnimalSlot = ({ animal }: AnimalSlotProps) => {
+  return (
+    <div className="bg-zinc-50 rounded-lg border p-3"> 
+      <div className="flex justify-between items-center">
+        <span className="flex gap-1 items-center text-sm font-medium text-foreground"><PawPrint className="text-[#6EC3F4]" size={15}/>{animal.nome}</span>
+        <Trash2 className="cursor-pointer text-red-600 hover:scale-103" size={15}/>
+      </div>
+    </div>
+  )
 }

@@ -73,7 +73,7 @@ function Layout() {
           </div>
           <div className="flex flex-col gap-2 justify-around space-y-4">
             <SidebarItem onClick={() => router('client/')}>
-              <User />Clientes
+              <User />Tutores & Pets
             </SidebarItem>
             <SidebarItem onClick={() => router('client/')}>
               <Calendar />Agenda
@@ -83,7 +83,7 @@ function Layout() {
             <LogOut />Sair
           </SidebarItem>
         </SidebarMenu>
-        <main className="flex-1 p-4 overflow-y-auto">
+        <main className="flex-1 px-20 py-10 overflow-y-auto bg-zinc-100">
           <Outlet />
         </main>
       </div>
