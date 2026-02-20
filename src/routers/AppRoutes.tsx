@@ -1,4 +1,4 @@
-import { Outlet, Route, Routes, useNavigate, matchPath } from "react-router-dom";
+import { Outlet, Route, Routes, useNavigate, NavLink } from "react-router-dom";
 import App from "../App";
 import { useMemo, useState } from "react";
 import { SidebarMenu, SidebarMenuItem } from "@/components/ui/sidebar";
@@ -46,6 +46,11 @@ const actionsConfig = [
   // },
 ];
 
+const navItems = [
+  { to: '/client', icon: User, label: 'Tutores & Pets', end: true },
+
+];
+
 function Layout() {
   const [mostrarModal, setMostrarModal] = useState(false);
 
@@ -58,33 +63,38 @@ function Layout() {
   // }, [location.pathname]);
 
   return (
-    <div className="bg-zinc-50 w-screen h-screen flex flex-col overflow-hidden">
-      <header className="shrink-0 border-b shadow border-zinc-200">
-        <nav className="flex gap-2 justify-between items-center h-14 p-5">
-          <img onClick={() => router("/")} src="../../img/mareve.png" alt="Logo mareve" className="h-40 w-auto object-contain cursor-pointer" />
-          <UserDropdown/>
+    <div className="bg-zinc-50 w-screen h-screen overflow-hidden">
+      <aside className="flex flex-col h-screen fixed top-0 left-0 z-50 overflow-hidden border-r shadow bg-zinc-50 w-64">
+        <div className="border-b shadow">
+          <img onClick={() => router("/")} src="../../img/mareve.png" alt="Logo mareve" className="h-60 w-full border-b shadow object-contain cursor-pointer hover:scale-101 transiction-all ease-in-out duration-200" />
+        </div>
+        <nav className="w-full p-4 flex-1 gap-2 space-y-1">
+          {navItems.map(({ to, icon: Icon, label, end }) => (
+            <NavLink
+              key={to}
+              to={to}
+              end={end}
+              className="text-zinc-500 font-medium text-sm flex gap-2 items-center cursor-pointer p-3 rounded-lg
+              hover:text-foreground hover:bg-muted hover:scale-103 transition-all duration-200 ease-in-out" onClick={() => router('client/')}>
+              <Icon className="w-5 h-5 shrink-0" />
+              <span>{label}</span>
+            </NavLink>
+          ))}
         </nav>
-      </header>
-      <div className="flex flex-1 overflow-hidden">
-        <SidebarMenu className="bg-[#33383c] w-64 p-4 flex flex-col gap-2 h-full space-y-4">
-          <div className="flex justify-center items-center">
-            <img src="../../img/mareve.png" alt="Logo mareve"
-              className="object-contain" />
+        <div className="border-t p-3">
+          <button className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 cursor-pointer">
+            <LogOut /> Sair
+          </button>
+        </div>
+      </aside>
+      <div className="flex flex-col h-screen ml-64">
+        <header className="flex justify-end items-center border-b shadow h-14 bg-white px-6">
+          <UserDropdown />
+        </header>
+        <main className="flex-1 overflow-y-auto bg-zinc-100 p-6">
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet />
           </div>
-          <div className="flex flex-col gap-2 justify-around space-y-4">
-            <SidebarItem onClick={() => router('client/')}>
-              <User />Tutores & Pets
-            </SidebarItem>
-            <SidebarItem onClick={() => router('client/')}>
-              <Calendar />Agenda
-            </SidebarItem>
-          </div>
-          <SidebarItem onClick={() => router('client/')}>
-            <LogOut />Sair
-          </SidebarItem>
-        </SidebarMenu>
-        <main className="flex-1 px-20 py-10 overflow-y-auto bg-zinc-100">
-          <Outlet />
         </main>
       </div>
     </div>

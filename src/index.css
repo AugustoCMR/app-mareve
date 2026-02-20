@@ -113,12 +113,26 @@
   --sidebar-ring: oklch(0.556 0 0);
 }
 
+.gradient-text {
+  background: linear-gradient(135deg, #8e7cff, #6ec3f4);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+.gradient-bg {
+  background: linear-gradient(135deg, #8e7cff, #6ec3f4);
+}
+
 @layer base {
   * {
     @apply border-border outline-ring/50;
+    button:not(:disabled),
+    [role="button"]:not(:disabled) {
+      cursor: pointer;
+    }
   }
   body {
     @apply bg-background text-foreground;
   }
 }
-
