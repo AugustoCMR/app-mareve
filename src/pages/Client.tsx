@@ -1,13 +1,14 @@
 import type { Animal } from "@/@types/Animal";
 import type { ClientWithAnimals } from "@/@types/Client";
+import { ClientForm } from "@/components/ClientForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
 import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Plus, Trash, Trash2 } from "lucide-react";
 import { Activity, useMemo, useState } from "react";
 
 export const Client = () => {
 
-  const [showModalClientPainel, setShowModalClientPainel] = useState(false);
   const [selectedClient, setSelectedClient] = useState<ClientWithAnimals | undefined>(undefined);
+  const [showClientForm, setShowClientForm] = useState<boolean>(false);
 
   const clientsWithAnimal = useMemo<ClientWithAnimals[]>(() => {
     const c1 = { id: 1, tutor: 'Ana Silva', detalhe: 'Cachorro - Golden', status: 'Agendado' };
@@ -49,7 +50,9 @@ export const Client = () => {
     <div className="bg-zinc-100 min-h-screen space-y-4">
       <div className="flex justify-between">
         <h1 className='text-3xl font-bold'>Clientes</h1>
-        <button className="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1.5 hover:opacity-90 transition-opacity w-fit">
+        <button
+          className="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1.5 hover:opacity-90 transition-opacity w-fit"
+          onClick={() => setShowClientForm(true)}>
           <Plus className="w-4 h-4" /> Novo tutor
         </button>
       </div>
@@ -61,6 +64,7 @@ export const Client = () => {
           ))
         }
       </div>
+      <ClientForm setShowModal={setShowClientForm} showModal={showClientForm} />
     </div>
 
   )
