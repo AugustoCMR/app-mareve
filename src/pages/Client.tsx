@@ -82,7 +82,7 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
           <span className="font-semibold text-sm">{clientWithAnimal.tutor}</span>
         </div>
         {
-          expandButton ? <ChevronUp size={15} /> : <ChevronDown size={15} />
+          expandButton ? <ChevronUp size={15} /> : <ChevronDown size={15}/>
 
         }
 
