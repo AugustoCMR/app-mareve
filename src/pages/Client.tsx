@@ -1,7 +1,7 @@
 import type { Animal } from "@/@types/Animal";
 import type { ClientWithAnimals } from "@/@types/Client";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Trash, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Plus, Trash, Trash2 } from "lucide-react";
 import { Activity, useMemo, useState } from "react";
 
 export const Client = () => {
@@ -46,8 +46,13 @@ export const Client = () => {
   }, []);
 
   return (
-    <div className="bg-zinc-100 min-h-screen">
-      <h1 className='text-3xl font-bold mb-3'>Clientes</h1>
+    <div className="bg-zinc-100 min-h-screen space-y-4">
+      <div className="flex justify-between">
+        <h1 className='text-3xl font-bold'>Clientes</h1>
+        <button className="gradient-bg text-white px-4 py-2 rounded-xl text-sm font-semibold flex items-center gap-1.5 hover:opacity-90 transition-opacity w-fit">
+          <Plus className="w-4 h-4" /> Novo tutor
+        </button>
+      </div>
 
       <div className="grid grid-cols-1 m-auto w-full gap-2">
         {
@@ -82,7 +87,7 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
           <span className="font-semibold text-sm">{clientWithAnimal.tutor}</span>
         </div>
         {
-          expandButton ? <ChevronUp size={15} /> : <ChevronDown size={15}/>
+          expandButton ? <ChevronUp size={15} /> : <ChevronDown size={15} />
 
         }
 
@@ -91,9 +96,9 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
         <div className="border-t p-3 space-y-4">
           <div className="flex justify-between">
             <p className="flex gap-1 items-center font-semibold"><PawPrint className="text-[#8E7CFF]" size={15} />Pets</p>
-            <span className="flex gap-1  text-[#8E7CFF] text-sm items-center cursor-pointer hover:underline"><CirclePlus size={15}/> Adicionar pet</span>
+            <span className="flex gap-1  text-[#8E7CFF] text-sm items-center cursor-pointer hover:underline"><CirclePlus size={15} /> Adicionar pet</span>
           </div>
-          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 ">  
+          <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 ">
             {
               clientWithAnimal.animals.map((animal) => (
                 <AnimalSlot animal={animal} />
@@ -101,7 +106,7 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
             }
           </div>
           <div className="">
-            <span className="flex items-center gap-2 text-sm justify-end text-destructive"><Trash2 className="cursor-pointer hover:scale-103" size={15}/>Excluir tutor</span>
+            <span className="flex items-center gap-2 text-sm justify-end text-destructive"><Trash2 className="cursor-pointer hover:scale-103" size={15} />Excluir tutor</span>
           </div>
         </div>
       </Activity>
@@ -115,10 +120,10 @@ interface AnimalSlotProps {
 
 export const AnimalSlot = ({ animal }: AnimalSlotProps) => {
   return (
-    <div className="bg-zinc-50 rounded-lg border p-3"> 
+    <div className="bg-zinc-50 rounded-lg border p-3">
       <div className="flex justify-between items-center">
-        <span className="flex gap-1 items-center text-sm font-medium text-foreground"><PawPrint className="text-[#6EC3F4]" size={15}/>{animal.nome}</span>
-        <Trash2 className="cursor-pointer text-red-600 hover:scale-103" size={15}/>
+        <span className="flex gap-1 items-center text-sm font-medium text-foreground"><PawPrint className="text-[#6EC3F4]" size={15} />{animal.nome}</span>
+        <Trash2 className="cursor-pointer text-red-600 hover:scale-103" size={15} />
       </div>
     </div>
   )
