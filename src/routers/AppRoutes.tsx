@@ -64,14 +64,11 @@ function Layout() {
 
   return (
     <div className="bg-zinc-50 w-screen h-screen overflow-hidden">
-      <header className="flex justify-end items-center border-b shadow h-14">
-        <UserDropdown />
-      </header>
-      <aside className="fixed top-0 left-0 z-50 overflow-hidden border-r shadow bg-zinc-50">
-        <div>
-          <img onClick={() => router("/")} src="../../img/mareve.png" alt="Logo mareve" className="h-60 w-auto border-b shadow object-contain cursor-pointer hover:scale-101 transiction-all ease-in-out duration-200" />
+      <aside className="flex flex-col h-screen fixed top-0 left-0 z-50 overflow-hidden border-r shadow bg-zinc-50 w-64">
+        <div className="border-b shadow">
+          <img onClick={() => router("/")} src="../../img/mareve.png" alt="Logo mareve" className="h-60 w-full border-b shadow object-contain cursor-pointer hover:scale-101 transiction-all ease-in-out duration-200" />
         </div>
-        <nav className="w-6- p-4 flex-1 gap-2 space-y-1 ">
+        <nav className="w-full p-4 flex-1 gap-2 space-y-1">
           {navItems.map(({ to, icon: Icon, label, end }) => (
             <NavLink
               key={to}
@@ -84,15 +81,22 @@ function Layout() {
             </NavLink>
           ))}
         </nav>
-        <div className="border-t">
-          <button className="flex gap-2">
+        <div className="border-t p-3">
+          <button className="flex items-center gap-2 px-3 py-2.5 rounded-xl text-sm font-medium w-full text-muted-foreground hover:bg-destructive/10 hover:text-destructive transition-all duration-200 cursor-pointer">
             <LogOut /> Sair
           </button>
         </div>
       </aside>
-      {/* <main className="overflow-y-auto bg-zinc-100">
-        <Outlet />
-      </main> */}
+      <div className="flex flex-col h-screen ml-64">
+        <header className="flex justify-end items-center border-b shadow h-14 bg-white px-6">
+          <UserDropdown />
+        </header>
+        <main className="flex-1 overflow-y-auto bg-zinc-100 p-6">
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet />
+          </div>
+        </main>
+      </div>
     </div>
   )
 }
