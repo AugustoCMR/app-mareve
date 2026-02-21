@@ -1,11 +1,13 @@
 import {
-  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter
+  Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
+  DialogClose
 } from '@/components/ui/dialog';
 import { clientSchema } from '@/schemas/client';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
+import { PatternFormat } from "react-number-format";
 
 interface Props {
   showModal: boolean;
@@ -31,16 +33,18 @@ export const ClientForm = ({ showModal, setShowModal }: Props) => {
       setShowModal(false);
       form.reset();
     } catch (error) {
-      console.log('oi')
       console.error(error);
     }
   };
 
   return (
-    <Dialog open={showModal} onOpenChange={setShowModal}>
+    <Dialog open={showModal} onOpenChange={(open) => {
+      setShowModal(open);
+      if (!open) form.reset();
+    }}>
       <DialogContent className="max-w-7xl sm:max-w-[425px]">
         <DialogHeader>
-          <DialogTitle className="font-[Manrope]">Novo tutor</DialogTitle>
+          <DialogTitle className="">Novo tutor</DialogTitle>
           <DialogDescription>Cadastre um novo tutor</DialogDescription>
         </DialogHeader>
 
@@ -53,22 +57,92 @@ export const ClientForm = ({ showModal, setShowModal }: Props) => {
                 <FormItem>
                   <FormLabel>Nome *</FormLabel>
                   <FormControl>
-                    <Input placeholder="Nome completo" {...field} />
+                    <Input placeholder="Nome completo do tutor" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="cpf"
+              render={({ field: { onChange, value, ...rest } }) => (
+                <FormItem>
+                  <FormLabel>CPF</FormLabel>
+                  <FormControl>
+                    <PatternFormat
+                      format="###.###.###-##"
+                      mask="_"
+                      customInput={Input}
+                      placeholder="000.000.000-00"
+                      {...rest} 
+                      value={value}
+                      onValueChange={(values) => {
+                        onChange(values.value);
+                      }}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="phone"
+              render={({ field: { onChange, value, ...rest} }) => (
+                <FormItem>
+                  <FormLabel>Telefone</FormLabel>
+                  <FormControl>
+                    <PatternFormat
+                      format="(##) ######-####"
+                      mask="_"
+                      placeholder="(DDD) 00000-0000"
+                      customInput={Input}
+                      {...rest}
+                      onValueChange={(values) => onChange(values.value)}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="email"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Email</FormLabel>
+                  <FormControl>
+                    <Input placeholder="Digite o email do tutor" {...field} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+            <FormField
+              control={form.control}
+              name="address"
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>Endereço</FormLabel>
+                  <FormControl>
+                    <Input maxLength={255} placeholder="Digite o endereço do tutor" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
             <DialogFooter className="mt-6">
+              <DialogClose asChild>
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
+                >
+                  Cancelar
+                </button>
+              </DialogClose>
               <button
-                type="button"
-                onClick={() => setShowModal(false)}
-                className="px-4 py-2 rounded-xl text-sm font-medium text-muted-foreground hover:bg-muted transition-colors"
-              >
-                Cancelar
-              </button>
-              <button 
-                type="submit" 
+                type="submit"
                 className="gradient-bg text-white px-5 py-2 rounded-xl text-sm font-semibold hover:opacity-90"
               >
                 Cadastrar

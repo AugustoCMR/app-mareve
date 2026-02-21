@@ -85,8 +85,10 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
       <div className="flex justify-between items-center cursor-pointer hover:bg-zinc-100 p-3" onClick={() => setExpandButton(!expandButton)}>
         <div className="flex gap-2">
           <Avatar className="flex size-10 overflow-hidden rounded-lg">
-            <AvatarImage src="https://github.com/shadcn.png" />
-            <AvatarFallback>CN</AvatarFallback>
+            <AvatarImage src="https://github.com/shadcn.pn" />
+            <AvatarFallback className="flex items-center justify-center border rounded-lg gradient-bg w-full text-white font-semibold text-sm">
+              CN
+            </AvatarFallback>
           </Avatar>
           <span className="font-semibold text-sm">{clientWithAnimal.tutor}</span>
         </div>
