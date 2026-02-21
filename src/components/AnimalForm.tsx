@@ -2,18 +2,17 @@ import {
   Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter,
   DialogClose
 } from '@/components/ui/dialog';
-import { clientSchema } from '@/schemas/client';
 import { zodResolver } from "@hookform/resolvers/zod";
 import { useForm } from 'react-hook-form';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from './ui/form';
 import { Input } from './ui/input';
-import { PatternFormat } from "react-number-format";
 import { animalSchema } from '@/schemas/animal';
 import {
-  Select, SelectContent, SelectItem, SelectTrigger, SelectValue
+  Select, SelectContent, SelectGroup, SelectItem, SelectLabel, SelectTrigger, SelectValue
 } from '@/components/ui/select';
 import { useState } from 'react';
-import type { SpeciesType } from '@/constants/species';
+import { Textarea } from './ui/textarea';
+import { NumericFormat } from 'react-number-format';
 
 interface Props {
   showModal: boolean;
@@ -25,7 +24,7 @@ export const AnimalForm = ({ showModal, setShowModal }: Props) => {
     resolver: zodResolver(animalSchema),
     defaultValues: {
       name: "",
-      specie: "Cachorro",
+      specie: undefined,
       breed: "",
       age: "",
       weight: "",
@@ -77,18 +76,23 @@ export const AnimalForm = ({ showModal, setShowModal }: Props) => {
               name="specie"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>CPF</FormLabel>
+                  <FormLabel>Espécie *</FormLabel>
                   <FormControl>
                     <Select
-                      value={specie}
-                    // onValueChange={(v) => setSpecie((f) => ({ ...f, species: v as SpeciesType }))}
+                      value={field.value ?? ""}
+                      onValueChange={field.onChange}
                     >
-                      <SelectTrigger data-testid="pet-species-select"><SelectValue /></SelectTrigger>
+                      <SelectTrigger className='w-full'>
+                        <SelectValue placeholder="Seleciona uma espécie" />
+                      </SelectTrigger>
                       <SelectContent>
-                        <SelectItem value="Cao">Cao</SelectItem>
-                        <SelectItem value="Gato">Gato</SelectItem>
-                        <SelectItem value="Ave">Ave</SelectItem>
-                        <SelectItem value="Outro">Outro</SelectItem>
+                        <SelectGroup>
+                          <SelectLabel>Seleciona uma espécie</SelectLabel>
+                          <SelectItem value="Cachorro">Cachorro</SelectItem>
+                          <SelectItem value="Gato">Gato</SelectItem>
+                          <SelectItem value="Ave">Ave</SelectItem>
+                          <SelectItem value="Outros">Outros </SelectItem>
+                        </SelectGroup>
                       </SelectContent>
                     </Select>
                   </FormControl>
@@ -101,9 +105,9 @@ export const AnimalForm = ({ showModal, setShowModal }: Props) => {
               name="breed"
               render={({ field }) => (
                 <FormItem>
-                  <FormLabel>Email</FormLabel>
+                  <FormLabel>Raça</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite a espécie" {...field} />
+                    <Input placeholder="Digite a raça" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -112,11 +116,38 @@ export const AnimalForm = ({ showModal, setShowModal }: Props) => {
             <FormField
               control={form.control}
               name="age"
-              render={({ field }) => (
+              render={({ field: { onChange, value, ...field } }) => (
                 <FormItem>
-                  <FormLabel>Endereço</FormLabel>
+                  <FormLabel>Idade</FormLabel>
                   <FormControl>
-                    <Input placeholder="Digite a idade" {...field} />
+                    <NumericFormat
+                      {...field}
+                      value={value}
+                      customInput={Input}
+                      placeholder="0.00"
+                      decimalScale={2}
+                      decimalSeparator="."
+                      onValueChange={(values) => {
+                        onChange(values.floatValue ?? "");
+                      }}
+                      allowNegative={false}
+                      className="w-full"
+                      isAllowed={(values) => {
+                        const { floatValue, value: stringValue } = values;
+
+                        if (floatValue === undefined) return true;
+
+                        if (floatValue < 1) {
+                          return floatValue <= 0.12;
+                        }
+
+                        if (floatValue > 100) {
+                          return floatValue <= 100
+                        }
+
+                        return Number.isInteger(floatValue);
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -125,24 +156,47 @@ export const AnimalForm = ({ showModal, setShowModal }: Props) => {
             <FormField
               control={form.control}
               name="weight"
-              render={({ field }) => (
+              render={({ field: { onChange, value, ...field } }) => (
                 <FormItem>
-                  <FormLabel>Endereço</FormLabel>
+                  <FormLabel>Peso (kg)</FormLabel>
                   <FormControl>
-                    <Input maxLength={255} placeholder="Digite o peso" {...field} />
+                    <NumericFormat
+                      {...field}
+                      value={value}
+                      customInput={Input}
+                      placeholder="0,00"
+                      decimalScale={2}
+                      max={50}
+                      allowNegative={false}
+                      fixedDecimalScale={false}
+                      decimalSeparator=","
+                      thousandSeparator="."
+                      onValueChange={(values) => {
+                        onChange(values.floatValue ?? "");
+                      }}
+                      className="w-full"
+                       isAllowed={(values) => {
+                       const { floatValue, value: stringValue } = values;
+
+                        if (floatValue === undefined) return true;
+
+
+                        return floatValue <= 200;
+                      }}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
               )}
             />
-               <FormField
+            <FormField
               control={form.control}
               name="observation"
               render={({ field }) => (
                 <FormItem>
                   <FormLabel>Observações</FormLabel>
                   <FormControl>
-                    <Input maxLength={500} placeholder="Digite aqui observações sobre o pet" {...field} />
+                    <Textarea maxLength={500} placeholder="Digite aqui observações sobre o pet" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

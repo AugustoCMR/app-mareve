@@ -1,14 +1,16 @@
 import type { Animal } from "@/@types/Animal";
 import type { ClientWithAnimals } from "@/@types/Client";
+import { AnimalForm } from "@/components/AnimalForm";
 import { ClientForm } from "@/components/ClientForm";
 import { Avatar, AvatarFallback, AvatarImage } from "@radix-ui/react-avatar";
-import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Plus, Trash, Trash2 } from "lucide-react";
+import { ChevronDown, ChevronUp, CirclePlus, PawPrint, Plus, Trash2 } from "lucide-react";
 import { Activity, useMemo, useState } from "react";
 
 export const Client = () => {
 
   const [selectedClient, setSelectedClient] = useState<ClientWithAnimals | undefined>(undefined);
   const [showClientForm, setShowClientForm] = useState<boolean>(false);
+  const [showAnimalForm, setShowAnimalForm] = useState<boolean>(false);
 
   const clientsWithAnimal = useMemo<ClientWithAnimals[]>(() => {
     const c1 = { id: 1, tutor: 'Ana Silva', detalhe: 'Cachorro - Golden', status: 'Agendado' };
@@ -60,11 +62,15 @@ export const Client = () => {
       <div className="grid grid-cols-1 m-auto w-full gap-2">
         {
           clientsWithAnimal.map((client) => (
-            <ClientSlot clientWithAnimal={client} />
+            <ClientSlot
+              clientWithAnimal={client}
+              setShowAnimalForm={setShowAnimalForm}
+            />
           ))
         }
       </div>
       <ClientForm setShowModal={setShowClientForm} showModal={showClientForm} />
+      <AnimalForm setShowModal={setShowAnimalForm} showModal={showAnimalForm} />
     </div>
 
   )
@@ -72,11 +78,10 @@ export const Client = () => {
 
 interface ClientSlotProps {
   clientWithAnimal: ClientWithAnimals;
-  onOpenChange?: (open: boolean) => void;
-  setSelectedClient?: (clientWithAnimal: ClientWithAnimals) => void;
+  setShowAnimalForm: (open: boolean) => void;
 }
 
-export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }: ClientSlotProps) => {
+export const ClientSlot = ({ clientWithAnimal, setShowAnimalForm }: ClientSlotProps) => {
 
   const [expandButton, setExpandButton] = useState(false);
 
@@ -102,7 +107,13 @@ export const ClientSlot = ({ clientWithAnimal, onOpenChange, setSelectedClient }
         <div className="border-t p-3 space-y-4">
           <div className="flex justify-between">
             <p className="flex gap-1 items-center font-semibold"><PawPrint className="text-[#8E7CFF]" size={15} />Pets</p>
-            <span className="flex gap-1  text-[#8E7CFF] text-sm items-center cursor-pointer hover:underline"><CirclePlus size={15} /> Adicionar pet</span>
+            <span
+              className="flex gap-1  text-[#8E7CFF] text-sm items-center cursor-pointer hover:underline"
+              onClick={() => setShowAnimalForm(true)}
+            >
+              <CirclePlus size={15} />
+              Adicionar pet
+            </span>
           </div>
           <div className="grid grid-cols-1 gap-2 lg:grid-cols-2 ">
             {
