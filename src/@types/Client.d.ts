@@ -5,6 +5,8 @@ export interface Client {
   tutor: string;
   detalhe: string;
   status: string;
+  email: string;
+  cpf: string;
 }
 
 export type ClientWithAnimals = Client &  {
